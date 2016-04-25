@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+    <link href="testWords.css" rel="stylesheet" type="text/css">
+    <title>LEK70 CS1520 Exercise 9</title>
+  </head>
+  <body>
+    <div class="title">CS1520 Exercise 9</div>
+    <h2>By: Luke Kljucaric</h2>
+    
+    <div id="empty">
+      <button onclick="getWords()">Get Word</button>
+    </div>
+    <div id="tableContainer">
+      <table id="table" class="thetable">
+        <tr>
+          <th>Word</th>
+          <th>Count</th> 
+        </tr>
+      </table>
+    </div>
+    <script type="text/javascript">
+      var xhttp;
+      var xml;
+      var i;
+      var found = false;
+      var words = [];
+      var value = [];
+      var text;
+      var results = [];
+      var count = [];
+
+      function getWords()
+      {
+        xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "getWords.php", true);
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+
+              xml = xhttp.responseXML;
+
+              words = xml.getElementsByTagName("Word");
+
+              value = words[0].getElementsByTagName("value");
+              text = value[0].childNodes[0].nodeValue;
+
+              found = false;
+
+              for(i = 0; i < results.length; i++)
+              {
+                if(results[i] === text)
+                {
+                  count[i]++;
+                  found = true;
+                  document.getElementById(i).innerHTML = "<td>" + results[i] + "</td><td>" + count[i] + "</td>";
+                  break;
+                }
+              }
+
+              if(!found)
+              {
+                document.getElementById("table").innerHTML += '<tr id="' + results.length + '"><td>' + text + "</td><td>" + 1 +"</td></tr>";
+                count[results.length] = 1;
+                results[results.length] = text;
+              }
+            }
+        };
+      }
+    </script>
+  </body>
+</html>
